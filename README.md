@@ -11,7 +11,16 @@ Usage (in an app repo Jenkinsfile):
 
 @Library('my-shared-lib@main') _
 
-node {
-  checkout scm
-  ciPipeline publish: 'docker', generateDockerfile: true, notify: true
+pipeline {
+    agent any
+
+    stages {
+        stage('Build & Package') {
+            steps {
+                script {
+                    ciPipeline publish: 'docker', generateDockerfile: true, notify: true
+                }
+            }
+        }
+    }
 }
