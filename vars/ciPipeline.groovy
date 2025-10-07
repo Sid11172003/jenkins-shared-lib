@@ -4,6 +4,7 @@ def call(Map config = [:]) {
 
     stage('Prepare') {
         if (config.generateDockerfile) {
+            echo "Generating Dockerfile..."
             def tpl = libraryResource('templates/Dockerfile.tpl')
             writeFile file: 'Dockerfile', text: tpl
             echo 'Dockerfile generated from template'
@@ -26,12 +27,12 @@ def call(Map config = [:]) {
 
     stage('Publish') {
         if (config.publish) {
-            echo 'Publishing artifacts...'
+            echo "Publishing artifacts..."
             if (config.publish == 'docker') {
                 sh "docker build -t ${config.dockerImage ?: 'my-app:latest'} ."
-                sh "echo 'docker push placeholder'"
+                sh "docker push ${config.dockerImage ?: 'my-app:latest'}"
             } else {
-                sh "echo 'Publish step for ${config.publish}'"
+                echo "Publish step for ${config.publish}"
             }
         } else {
             echo 'Publish skipped'
@@ -40,7 +41,8 @@ def call(Map config = [:]) {
 
     stage('Post') {
         if (config.notify) {
-            echo "Build finished: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+            echo "Notification: Build finished: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
         }
     }
 }
+
