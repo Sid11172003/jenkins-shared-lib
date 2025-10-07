@@ -1,3 +1,4 @@
+// vars/ciPipeline.groovy
 def call(Map config = [:]) {
     echo "Running shared ciPipeline with config: ${config}"
 
